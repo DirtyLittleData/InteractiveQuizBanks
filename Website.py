@@ -58,13 +58,12 @@ def submit_answer():
 def next_question():
     if st.session_state.current_question < len(QUESTIONS) - 1:
         st.session_state.current_question += 1
-        st.session_state.answered = False
-        st.session_state.selected_answers = []
     else:
         st.session_state.current_question = 0  # Reset to first question
         st.session_state.score = 0  # Reset score
-        st.session_state.answered = False
-        st.session_state.selected_answers = []
+    
+    st.session_state.answered = False
+    st.session_state.selected_answers = []
 
 # UI
 st.title("Interactive Quiz")
@@ -102,5 +101,5 @@ with col1:
         st.session_state.answered = False
         st.session_state.selected_answers = []
 with col2:
-    if st.button("➡ Next Question") and st.session_state.answered:
+    if st.button("➡ Next"):
         next_question()

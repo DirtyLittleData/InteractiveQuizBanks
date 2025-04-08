@@ -2,11 +2,16 @@ import streamlit as st
 import csv
 import random
 import string
+import os
 
 # Load questions from CSV
 def load_questions(filename="quiz_questions.csv"):
+    # Ensure it works no matter where it's run from
+    base_path = os.path.dirname(__file__)
+    full_path = os.path.join(base_path, filename)
+
     questions = []
-    with open(filename, newline='', encoding='utf-8-sig') as csvfile:
+    with open(full_path, newline='', encoding='utf-8-sig') as csvfile:
         reader = csv.DictReader(csvfile)
         for row in reader:
             if "Question" not in row or "Choices" not in row or "Correct" not in row:
@@ -90,7 +95,7 @@ if st.session_state.answered:
         st.success("Correct! ✅")
     else:
         st.error("Incorrect ❌")
-    st.info(question["Explanation"])
+    st.info(question.get("Explanation", "No explanation provided."))  # Fallback if Explanation is missing
 
 # Navigation buttons
 col1, col2 = st.columns([1, 1])

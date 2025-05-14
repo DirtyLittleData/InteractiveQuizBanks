@@ -87,8 +87,16 @@ selected_answers = st.multiselect(
 )
 st.session_state.selected_answers = selected_answers
 
-if st.button("Submit") and not st.session_state.answered:
-    submit_answer()
+if not st.session_state.answered:
+    if st.button("✅ Submit Answer"):
+        submit_answer()
+else:
+    if st.session_state.correct:
+        st.success("Correct! ✅")
+    else:
+        st.error("Incorrect ❌")
+    st.info(question.get("Explanation", "No explanation provided."))  # Fallback if Explanation is missing
+
 
 if st.session_state.answered:
     if st.session_state.correct:
@@ -106,5 +114,18 @@ with col1:
         st.session_state.answered = False
         st.session_state.selected_answers = []
 with col2:
-    if st.button("➡ Next"):
-        next_question()
+    if st.session_state.answered:
+        if st.button("➡ Next Question"):
+            next_question()
+    else:
+        st.write("Submit an answer to continue ⬆️")
+
+disabled_state = st.session_state.answered
+
+selected_answers = st.multiselect(
+    "Select your answer(s):",
+    choices_display.keys(),
+    format_func=lambda x: f"{x}) {choices_display[x]}",
+    default=st.session_state.selected_answers,
+    disabled=disabled_state
+)
